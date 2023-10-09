@@ -63,15 +63,17 @@ int main() {
             
             bool carry = false;  // flag to indicate if we had a carry
 
-            // Sum the digits using the "transform" algorithm.  This
-            //   algorithm traverses a range of values (in our case,
-            //   starting with the least-siginificant [i.e., right most]
-            //   digit) of the original number, adding each digit to its
-            //   matching digit (by position) in the reversed number.
-            //
-            // The result is stored in the sum variable, which is
-            //   built up one digit at a time, respecting if a carry
-            //   digit was necessary for any iteration. 
+            /*
+             * Sum the digits using the "transform" algorithm.  This
+             *   algorithm traverses a range of values (in our case,
+             *   starting with the least-siginificant [i.e., right most]
+             *   digit) of the original number, adding each digit to its
+             *   matching digit (by position) in the reversed number.
+             *
+             * The result is stored in the sum variable, which is
+             *   built up one digit at a time, respecting if a carry
+             *   digit was necessary for any iteration. 
+             */
             std::transform(n.rbegin(), n.rend(), sum.rbegin(), 
                 [&](auto d) {
                     auto v = d + *rd++ + carry;
