@@ -7,10 +7,10 @@ Here's a table showing the improvements I did to make the application go faster.
 | Version | Time (Real) | Time (User) | Time (Sys) | Speedup (Real) | Changes |
 | :-----: | :-----: | :-----: | :-----: | :------: | ------- | 
 | 01 | 11m1.077s | 10m51.699s | 0m3.613s | &mdash; | Initial Version - No Changes |
-| 02 | 1m23.467s | 13m51.211s | 0m0.346s | 7.92% | Each thread calls getNext(number) and share a maxIter value and Records vector |
-| 03 | 1m8.646s  | 11m24.040s | 0m0.014s | 9.63% | Each thread cals getNext(number) and have their own maxIter and Records vector |
-| 04 | 1m9.739s  | &mdash;    | &mdash;  | 9.48% | This is from version 04b4 - See notes below for implementation notes |
-| 05 | 1m56.465s | 18m33.869  | 0m0.849s | 5.68% | Each thread has different batch sizes 1, 2, 4, 8, ... , 512 |
+| 02 | 1m23.467s | 13m51.211s | 0m0.346s | 7.92x | Each thread calls getNext(number) and share a maxIter value and Records vector |
+| 03 | 1m8.646s  | 11m24.040s | 0m0.014s | 9.63x | Each thread cals getNext(number) and have their own maxIter and Records vector |
+| 04 | 1m9.739s  | &mdash;    | &mdash;  | 9.48x | This is from version 04b4 - See notes below for implementation notes |
+| 05 | 1m56.465s | 18m33.869  | 0m0.849s | 5.68x | Each thread has different batch sizes 1, 2, 4, 8, ... , 512 |
 
 ## Notes
 1. All times where obtained through testing on blue at roughly the same time of day
