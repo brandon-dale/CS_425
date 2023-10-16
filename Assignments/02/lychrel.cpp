@@ -65,9 +65,11 @@ int main() {
                     Number sum(n.size());   // Value used to store current sum of digits
                     Number r = n.reverse(); // reverse the digits of the value
 
-                    // An iterator pointing to the first digit of the reversed
-                    //   value.  This iterator will be incremented to basically
-                    //   traverse the digits of the main number in reverse
+                    /*
+                     * An iterator pointing to the first digit of the reversed
+                     *   value.  This iterator will be incremented to basically
+                     *   traverse the digits of the main number in reverse
+                     */
                     auto rd = n.begin(); 
                     
                     bool carry = false;  // flag to indicate if we had a carry
@@ -97,9 +99,11 @@ int main() {
                     // If there's a final carry value, prepend that to the sum
                     if (carry) { sum.push_front(1); }
 
-                    // Transfer the sum making it the next number to be processed
-                    //   (i.e., reversed, summed, and checked if it's a
-                    //   palindrome)
+                    /*
+                     * Transfer the sum making it the next number to be processed
+                     *   (i.e., reversed, summed, and checked if it's a
+                     *   palindrome)
+                     */
                     n = sum;
                 }
 
@@ -143,13 +147,4 @@ int main() {
             }
         }
     }
-
-    // Output our final results
-    // std::cout << "\nmaximum number of iterations = " << maxIter << "\n";
-    // for (auto& [number, palindrome] : records) {
-    //     std::cout 
-    //         << "\t" << number 
-    //         << " : [" << palindrome.size() << "] "
-    //         << palindrome << "\n";
-    // }
 }
