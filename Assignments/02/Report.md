@@ -18,6 +18,7 @@ Here's a table showing the improvements I did to make the application go faster.
 2. The User and Sys times have been lost for version 04, and that code has been lost. 
    Since it is not the final submitted version, I have omitted those values. Though,
    I can re-write that code to get those times if desired.
+3. The final submitted version is 03.
 
 
 ## 04a Tests
