@@ -1,5 +1,5 @@
 /*
- * v06 - Single Producer, Single Consumer with Async
+ * v04 - Multiple Producers, Multiple Consumers
 */
 
 #include <iostream>
@@ -7,7 +7,6 @@
 #include <mutex>
 #include <thread>
 #include <atomic>
-#include <future>
 
 #include "Connection.h"
 #include "HTTPRequest.h"
@@ -94,20 +93,26 @@ int main(int argc, char* argv[]) {
 
     Connection connection(port);
 
-    // Create producer
-    std::jthread producer{[&]() {
-        while (connection) {
-            std::async (std::launch::async, [&]() {
+    // Specify Number of Producers and Consumers
+    size_t NUM_PRODUCERS = 5;
+    size_t NUM_CONSUMERS = 5;
+
+    // Create producers
+    for (auto prodId = 0; prodId < NUM_PRODUCERS; ++prodId) {
+        std::jthread producer{[&]() {
+            while (connection) {
                 auto client = connection.accept();
                 ringBuffer.store(client);
-            });
-        }
-    }};
+            }
+        }};
 
+        producer.detach();
+    }
+    
     // Create Consumer
-    std::jthread consumer{[&]() {
-        while (connection) {
-            std::async(std::launch::async, [&]() {
+    for (auto consId = 0; consId < NUM_CONSUMERS; ++consId) {
+        std::jthread consumer{[&]() {
+            while (connection) {
                 auto client = ringBuffer.read();
                 Session session(client);
                 std::string msg;
@@ -116,8 +121,10 @@ int main(int argc, char* argv[]) {
                 const char* root = "/home/faculty/shreiner/public_html/03";
                 HTTPResponse response(request, root);
                 session << response;
-            });
-        }
-    }};
+            }
+        }};
+
+        consumer.detach();
+    }
     
 }
