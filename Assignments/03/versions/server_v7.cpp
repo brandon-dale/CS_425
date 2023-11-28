@@ -1,5 +1,5 @@
 /*
- * v06 - Single Producer, Single Consumer with Async
+ * v07 - Multiple Producers, Single Consumer, With Async
 */
 
 #include <iostream>
@@ -94,18 +94,21 @@ int main(int argc, char* argv[]) {
 
     Connection connection(port);
 
-    // Create producer
-    std::jthread producer{[&]() {
-        while (connection) {
-            auto future = std::async (std::launch::async, [&]() {
+    // Specify Number of Producers and Consumers
+    size_t NUM_PRODUCERS = 10;
+
+    // Create producers
+    for (auto prodId = 0; prodId < NUM_PRODUCERS; ++prodId) {
+        std::jthread{[&]() {
+            while (connection) {
                 auto client = connection.accept();
                 ringBuffer.store(client);
-            });
-        }
-    }};
-
+            }
+        }}.detach();
+    }
+    
     // Create Consumer
-    std::jthread consumer{[&]() {
+    std::jthread{[&]() {
         while (connection) {
             auto future = std::async(std::launch::async, [&]() {
                 auto client = ringBuffer.read();

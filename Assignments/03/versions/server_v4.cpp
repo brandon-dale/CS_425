@@ -1,5 +1,5 @@
 /*
- * v04 - Multiple Producers, Multiple Consumers
+ * v04 - Multiple Producers, Single Consumer, No Async
 */
 
 #include <iostream>
@@ -94,24 +94,24 @@ int main(int argc, char* argv[]) {
     Connection connection(port);
 
     // Specify Number of Producers and Consumers
-    size_t NUM_PRODUCERS = 5;
-    size_t NUM_CONSUMERS = 5;
+    size_t NUM_PRODUCERS = 2;
+    size_t NUM_CONSUMERS = 1;
 
     // Create producers
     for (auto prodId = 0; prodId < NUM_PRODUCERS; ++prodId) {
-        std::jthread producer{[&]() {
+        std::jthread{[&]() {
             while (connection) {
                 auto client = connection.accept();
                 ringBuffer.store(client);
             }
-        }};
-
-        producer.detach();
+        }}.detach();
     }
+
+    std::cout << std::endl;
     
     // Create Consumer
     for (auto consId = 0; consId < NUM_CONSUMERS; ++consId) {
-        std::jthread consumer{[&]() {
+        std::jthread{[&]() {
             while (connection) {
                 auto client = ringBuffer.read();
                 Session session(client);
@@ -123,8 +123,6 @@ int main(int argc, char* argv[]) {
                 session << response;
             }
         }};
-
-        consumer.detach();
     }
     
 }

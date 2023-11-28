@@ -1,5 +1,5 @@
 /*
- * v06 - Single Producer, Single Consumer with Async
+ * v03 - Single Producer, Single Consumer
 */
 
 #include <iostream>
@@ -7,7 +7,6 @@
 #include <mutex>
 #include <thread>
 #include <atomic>
-#include <future>
 
 #include "Connection.h"
 #include "HTTPRequest.h"
@@ -61,6 +60,7 @@ public:
         storable.acquire();
         {
             std::lock_guard{storedMutex};
+            //std::cout << "storing " << t << " at " << nextStorable << std::endl;
             this->buffer.at(nextStorable) = t;
             //this->assign(nextStorable, t);
             ++nextStorable;
@@ -75,6 +75,7 @@ public:
             std::lock_guard{readMutex};
             //t = this->at(nextReadable);
             t = this->buffer.at(nextReadable);
+            //std::cout << "reading " << t << " at " << nextReadable << std::endl;
             ++nextReadable;
         }
         storable.release();
@@ -97,26 +98,22 @@ int main(int argc, char* argv[]) {
     // Create producer
     std::jthread producer{[&]() {
         while (connection) {
-            std::async (std::launch::async, [&]() {
-                auto client = connection.accept();
-                ringBuffer.store(client);
-            });
+            auto client = connection.accept();
+            ringBuffer.store(client);
         }
     }};
 
     // Create Consumer
     std::jthread consumer{[&]() {
         while (connection) {
-            std::async(std::launch::async, [&]() {
-                auto client = ringBuffer.read();
-                Session session(client);
-                std::string msg;
-                session >> msg;
-                HTTPRequest request(msg);
-                const char* root = "/home/faculty/shreiner/public_html/03";
-                HTTPResponse response(request, root);
-                session << response;
-            });
+            auto client = ringBuffer.read();
+            Session session(client);
+            std::string msg;
+            session >> msg;
+            HTTPRequest request(msg);
+            const char* root = "/home/faculty/shreiner/public_html/03";
+            HTTPResponse response(request, root);
+            session << response;
         }
     }};
     

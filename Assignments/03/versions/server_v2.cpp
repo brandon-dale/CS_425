@@ -1,5 +1,6 @@
 /*
  * v02 - Basic Threading
+ * Truly awful, mostly for fun
 */
 
 #include <iostream>

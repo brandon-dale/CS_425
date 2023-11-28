@@ -22,7 +22,7 @@ int main(int argc, char* argv[]) {
 
         int client = connection.accept();
 
-        std::async( [=]() {
+        auto future = std::async(std::launch::async, [&]() {
             Session session(client);
             std::string msg;
             session >> msg;
@@ -30,6 +30,6 @@ int main(int argc, char* argv[]) {
             const char* root = "/home/faculty/shreiner/public_html/03";
             HTTPResponse response(request, root);
             session << response;
-        }).get();
+        });
     }
 }
